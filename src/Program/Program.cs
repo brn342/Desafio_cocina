@@ -1,12 +1,7 @@
-﻿//-------------------------------------------------------------------------
-// <copyright file="Program.cs" company="Universidad Católica del Uruguay">
-// Copyright (c) Programación II. Derechos reservados.
-// </copyright>
-//-------------------------------------------------------------------------
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading; // Asegúrate de incluir este using para Thread.Sleep
 
 namespace Full_GRASP_And_SOLID
 {
@@ -31,6 +26,12 @@ namespace Full_GRASP_And_SOLID
             printer.PrintRecipe(recipe);
             printer = new FilePrinter();
             printer.PrintRecipe(recipe);
+
+            // Código agregado para verificar el estado de cocción
+            Console.WriteLine($"Cooked: {recipe.Cooked}");
+            recipe.Cook();
+            Thread.Sleep(500); // 0.5 segundos
+            Console.WriteLine($"Cooked: {recipe.Cooked}");
         }
 
         private static void PopulateCatalogs()
@@ -65,13 +66,17 @@ namespace Full_GRASP_And_SOLID
 
         private static Product GetProduct(string description)
         {
-            var query = from Product product in productCatalog where product.Description == description select product;
+            var query = from Product product in productCatalog
+                        where product.Description == description
+                        select product;
             return query.FirstOrDefault();
         }
 
         private static Equipment GetEquipment(string description)
         {
-            var query = from Equipment equipment in equipmentCatalog where equipment.Description == description select equipment;
+            var query = from Equipment equipment in equipmentCatalog
+                        where equipment.Description == description
+                        select equipment;
             return query.FirstOrDefault();
         }
     }

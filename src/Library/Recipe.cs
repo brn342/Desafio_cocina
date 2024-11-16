@@ -16,6 +16,9 @@ namespace Full_GRASP_And_SOLID
 
         public Product FinalProduct { get; set; }
 
+        // Propiedad Cooked de solo lectura
+        public bool Cooked { get; private set; } = false;
+
         // Agregado por Creator
         public void AddStep(Product input, double quantity, Equipment equipment, int time)
         {
@@ -61,6 +64,32 @@ namespace Full_GRASP_And_SOLID
             }
 
             return result;
+        }
+
+        // Nuevo método para obtener el tiempo total de cocción
+        public int GetCookTime()
+        {
+            int totalTime = 0;
+            foreach (BaseStep step in this.steps)
+            {
+                totalTime += step.Time;
+            }
+            return totalTime;
+        }
+
+        // Método para iniciar la cocción
+        public void Cook()
+        {
+            // Crear el adaptador pasando la instancia actual de Recipe
+            TimerClient adapter = new RecipeTimerClientAdapter(this);
+            CountdownTimer timer = new CountdownTimer();
+            timer.Register(this.GetCookTime(), adapter);
+        }
+
+        // Método interno para actualizar la propiedad Cooked
+        internal void SetCooked(bool cooked)
+        {
+            this.Cooked = cooked;
         }
     }
 }
